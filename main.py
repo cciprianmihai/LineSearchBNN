@@ -11,7 +11,7 @@ import train
 
 parser = argparse.ArgumentParser(description='Binary Neural Networks')
 parser.add_argument('--binary', type=str, default='connect',
-        help='BinaryConnect or BinaryNet')
+        help='connect, bb or nn')
 parser.add_argument('--cuda', type=bool, default=False,
         help='Use cuda or not')
 parser.add_argument('--in_features', type=int, default=784,

@@ -13,6 +13,7 @@ from torch.autograd import Variable
 
 from module import BinaryLinear, BinaryStraightThrough
 
+
 class BinaryConnect(nn.Module):
     def __init__(self, in_features, out_features, num_units=2048):
         super(BinaryConnect, self).__init__()
@@ -55,6 +56,33 @@ class BinaryNet(nn.Module):
                 BinaryStraightThrough(),
                 nn.Dropout(),
                 BinaryLinear(num_units, 10),
+                nn.BatchNorm1d(10, eps=1e-4),
+                nn.LogSoftmax()
+                )
+
+    def forward(self, x):
+        return self.net(x)
+
+
+class Net(nn.Module):
+    def __init__(self, in_features, out_features, num_units=4096):
+        super(Net, self).__init__()
+
+        self.net = nn.Sequential(
+                nn.Dropout(p=0.2),
+                nn.Linear(in_features, num_units),
+                nn.BatchNorm1d(num_units, eps=1e-4),
+                BinaryStraightThrough(),
+                nn.Dropout(),
+                nn.Linear(num_units, num_units),
+                nn.BatchNorm1d(num_units, eps=1e-4),
+                BinaryStraightThrough(),
+                nn.Dropout(),
+                nn.Linear(num_units, num_units),
+                nn.BatchNorm1d(num_units, eps=1e-4),
+                BinaryStraightThrough(),
+                nn.Dropout(),
+                nn.Linear(num_units, 10),
                 nn.BatchNorm1d(10, eps=1e-4),
                 nn.LogSoftmax()
                 )

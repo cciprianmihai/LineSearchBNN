@@ -32,8 +32,10 @@ def train(args):
 
     if args.binary == 'connect':
         net = model.BinaryConnect(args.in_features, args.out_features)
-    else:
+    elif args.binary == 'bnn':
         net = model.BinaryNet(args.in_features, args.out_features)
+    elif args.binary == 'nn':
+        net = model.Net(args.in_features, args.out_features)
     # net = nn.DataParallel(net)
     print(net)
 
