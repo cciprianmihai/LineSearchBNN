@@ -32,4 +32,6 @@ parser.add_argument('--line_search_fn', type=str, default=None,
         help='None or strong_wolfe')
 args = parser.parse_args()
 
+print("Arguments:", args)
+
 train.train(args)
