@@ -26,6 +26,10 @@ parser.add_argument('--lr', type=float, default=0.001,
         help='Learning rate')
 parser.add_argument('--epochs', type=int, default=20,
         help='Epochs')
+parser.add_argument('--optimizer', type=str, default='Adam',
+        help='Adam or LFBGS w/wo LS')
+parser.add_argument('--line_search_fn', type=str, default=None,
+        help='None or strong_wolfe')
 args = parser.parse_args()
 
 train.train(args)

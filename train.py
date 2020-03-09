@@ -18,6 +18,7 @@ from tqdm import tqdm
 import model
 from weight_clip import weight_clip
 
+
 def train(args): 
     kwargs = {'num_workers': 2, 'pin_memory': True} if args.cuda else {}
     train_loader = data.DataLoader(
@@ -39,12 +40,19 @@ def train(args):
     if args.cuda:
         net.cuda()
 
-    optimizer = optim.Adam(net.parameters(), lr=args.lr)
+    if args.optimizer == 'Adam':
+        optimizer = optim.Adam(net.parameters(), lr=args.lr)
+    elif args.optimizer == 'LBFGS':
+        if args.line_search_fn is None:
+            optimizer = optim.LBFGS(net.parameters(), lr=args.lr)
+        elif args.line_search_fn == 'strong_wolfe':
+            optimizer = optim.LBFGS(net.parameters(), lr=args.lr, line_search_fn='strong_wolfe')
     creterion = nn.NLLLoss()
 
     for epoch in range(1, args.epochs+1):
         train_epoch(epoch, net, creterion, optimizer, train_loader, args)
         test_epoch(net, creterion, test_loader, args)
+
 
 def train_epoch(epoch, net, creterion, optimizer, train_loader, args, valid_data=None):
     losses = 0
@@ -56,11 +64,14 @@ def train_epoch(epoch, net, creterion, optimizer, train_loader, args, valid_data
         data, target = Variable(data.view(args.batch_size, -1)), Variable(target)
 
         optimizer.zero_grad()
-
         output = net(data)
         loss = creterion(output, target)
         loss.backward()
-        optimizer.step()
+
+        def closure():
+            return loss
+
+        optimizer.step(closure)
         weight_clip(net.parameters())
 
         y_pred = torch.max(output, 1)[1]
@@ -71,6 +82,7 @@ def train_epoch(epoch, net, creterion, optimizer, train_loader, args, valid_data
 
     if valid_data is not None:
         pass
+
 
 def test_epoch(net, creterion, test_loader, args):
     net.eval()
