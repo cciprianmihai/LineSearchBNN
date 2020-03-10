@@ -30,7 +30,13 @@ parser.add_argument('--optimizer', type=str, default='Adam',
         help='Adam or LFBGS w/wo LS')
 parser.add_argument('--line_search_fn', type=str, default=None,
         help='None or strong_wolfe')
+parser.add_argument('--filename', type=str, default='results',
+        help='filename')
 args = parser.parse_args()
+
+# Redirect the output to file
+import sys
+sys.stdout = open('./results/' + args.filename + '.txt', 'w')
 
 print("Arguments:", args)
 
