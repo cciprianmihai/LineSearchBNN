@@ -49,14 +49,14 @@ def train(args):
             optimizer = optim.LBFGS(net.parameters(), lr=args.lr)
         elif args.line_search_fn == 'strong_wolfe':
             optimizer = optim.LBFGS(net.parameters(), lr=args.lr, line_search_fn='strong_wolfe')
-    creterion = nn.NLLLoss()
+    criterion = nn.NLLLoss()
 
     for epoch in range(1, args.epochs+1):
-        train_epoch(epoch, net, creterion, optimizer, train_loader, args)
-        test_epoch(net, creterion, test_loader, args)
+        train_epoch(epoch, net, criterion, optimizer, train_loader, args)
+        test_epoch(net, criterion, test_loader, args)
 
 
-def train_epoch(epoch, net, creterion, optimizer, train_loader, args, valid_data=None):
+def train_epoch(epoch, net, criterion, optimizer, train_loader, args, valid_data=None):
     losses = 0
     accs = 0
     net.train()
@@ -65,15 +65,31 @@ def train_epoch(epoch, net, creterion, optimizer, train_loader, args, valid_data
             data, target = data.cuda(), target.cuda()
         data, target = Variable(data.view(args.batch_size, -1)), Variable(target)
 
-        optimizer.zero_grad()
-        output = net(data)
-        loss = creterion(output, target)
-        loss.backward()
+        # Define optimization step when using LBFGS optimizer
+        if args.optimizer == 'LBFGS':
 
-        def closure():
-            return loss
+            # Compute the closure used in optimization step
+            def closure():
+                optimizer.zero_grad()
+                output = net(data)
+                loss = criterion(output, target)
+                loss.backward()
+                return loss
+            optimizer.step(closure)
 
-        optimizer.step(closure)
+            # Compute output and loss to log the results
+            optimizer.zero_grad()
+            output = net(data)
+            loss = criterion(output, target)
+            loss.backward()
+        # Define optimization step when using Adam optimizer
+        else:
+            optimizer.zero_grad()
+            output = net(data)
+            loss = criterion(output, target)
+            loss.backward()
+            optimizer.step()
+
         weight_clip(net.parameters())
 
         y_pred = torch.max(output, 1)[1]
@@ -86,7 +102,7 @@ def train_epoch(epoch, net, creterion, optimizer, train_loader, args, valid_data
         pass
 
 
-def test_epoch(net, creterion, test_loader, args):
+def test_epoch(net, criterion, test_loader, args):
     net.eval()
     losses = 0
     accs = 0
@@ -96,7 +112,7 @@ def test_epoch(net, creterion, test_loader, args):
         data, target = Variable(data.view(args.test_batch_size, -1)), Variable(target)
 
         output = net(data)
-        loss = creterion(output, target)
+        loss = criterion(output, target)
 
         y_pred = torch.max(output, 1)[1]
         accs += (torch.mean((y_pred == target).float())).data

@@ -1,0 +1,61 @@
+Arguments: Namespace(batch_size=100, binary='bnn', cuda=False, epochs=20, filename='adam_bnn', in_features=784, line_search_fn=None, lr=0.001, optimizer='Adam', out_features=10, test_batch_size=1000)
+BinaryNet(
+  (net): Sequential(
+    (0): Dropout(p=0.2, inplace=False)
+    (1): BinaryLinear (784 -> 4096)
+    (2): BatchNorm1d(4096, eps=0.0001, momentum=0.1, affine=True, track_running_stats=True)
+    (3): BinaryStraightThrough ()
+    (4): Dropout(p=0.5, inplace=False)
+    (5): BinaryLinear (4096 -> 4096)
+    (6): BatchNorm1d(4096, eps=0.0001, momentum=0.1, affine=True, track_running_stats=True)
+    (7): BinaryStraightThrough ()
+    (8): Dropout(p=0.5, inplace=False)
+    (9): BinaryLinear (4096 -> 4096)
+    (10): BatchNorm1d(4096, eps=0.0001, momentum=0.1, affine=True, track_running_stats=True)
+    (11): BinaryStraightThrough ()
+    (12): Dropout(p=0.5, inplace=False)
+    (13): BinaryLinear (4096 -> 10)
+    (14): BatchNorm1d(10, eps=0.0001, momentum=0.1, affine=True, track_running_stats=True)
+    (15): LogSoftmax()
+  )
+)
+Epoch 1: Train Loss=0.655, Train Accuracy=0.894
+	Test Loss=0.379, Test Accuracy=0.950
+Epoch 2: Train Loss=0.521, Train Accuracy=0.936
+	Test Loss=0.347, Test Accuracy=0.962
+Epoch 3: Train Loss=0.489, Train Accuracy=0.945
+	Test Loss=0.334, Test Accuracy=0.968
+Epoch 4: Train Loss=0.465, Train Accuracy=0.953
+	Test Loss=0.329, Test Accuracy=0.971
+Epoch 5: Train Loss=0.453, Train Accuracy=0.957
+	Test Loss=0.316, Test Accuracy=0.974
+Epoch 6: Train Loss=0.443, Train Accuracy=0.959
+	Test Loss=0.309, Test Accuracy=0.975
+Epoch 7: Train Loss=0.433, Train Accuracy=0.963
+	Test Loss=0.310, Test Accuracy=0.975
+Epoch 8: Train Loss=0.428, Train Accuracy=0.964
+	Test Loss=0.307, Test Accuracy=0.977
+Epoch 9: Train Loss=0.423, Train Accuracy=0.966
+	Test Loss=0.300, Test Accuracy=0.977
+Epoch 10: Train Loss=0.418, Train Accuracy=0.968
+	Test Loss=0.291, Test Accuracy=0.981
+Epoch 11: Train Loss=0.416, Train Accuracy=0.969
+	Test Loss=0.298, Test Accuracy=0.980
+Epoch 12: Train Loss=0.409, Train Accuracy=0.971
+	Test Loss=0.293, Test Accuracy=0.980
+Epoch 13: Train Loss=0.406, Train Accuracy=0.971
+	Test Loss=0.291, Test Accuracy=0.981
+Epoch 14: Train Loss=0.402, Train Accuracy=0.973
+	Test Loss=0.292, Test Accuracy=0.981
+Epoch 15: Train Loss=0.400, Train Accuracy=0.975
+	Test Loss=0.288, Test Accuracy=0.980
+Epoch 16: Train Loss=0.397, Train Accuracy=0.975
+	Test Loss=0.290, Test Accuracy=0.981
+Epoch 17: Train Loss=0.397, Train Accuracy=0.975
+	Test Loss=0.285, Test Accuracy=0.983
+Epoch 18: Train Loss=0.396, Train Accuracy=0.976
+	Test Loss=0.290, Test Accuracy=0.982
+Epoch 19: Train Loss=0.393, Train Accuracy=0.977
+	Test Loss=0.286, Test Accuracy=0.983
+Epoch 20: Train Loss=0.389, Train Accuracy=0.978
+	Test Loss=0.285, Test Accuracy=0.981
